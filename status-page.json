@@ -1,0 +1,169 @@
+{
+  "page_id": {
+    "type": "integer",
+    "description": "后端计算，创建时不应传入，修改时必须传入"
+  },
+  "account_id": {
+    "type": "integer"
+  },
+  "name": {
+    "type": "string"
+  },
+  "url_name": {
+    "type": "string",
+    "description": "可调用validate-url-name接口，根据name获取符合url最佳实践的slug"
+  },
+  "type": {
+    "type": "string",
+    "enum": ["public", "internal"],
+    "description": "创建status page后，该值不可修改"
+  },
+  "custom_domain": {
+    "type": "string",
+    "description": "指向 flashcat.com/status-page/${url_name}"
+  },
+  "logo": {
+    "type": "string"
+  },
+  "logo_url": {
+    "type": "string",
+    "description": "点击logo后跳转url"
+  },
+  "favicon": {
+    "type": "string"
+  },
+  "page_header": {
+    "type": "string"
+  },
+  "page_footer": {
+    "type": "string"
+  },
+  "date_view": {
+    "type": "string",
+    "enum": ["calendar", "list"],
+    "description": "历史变更视图模式"
+  },
+  "display_uptime_mode": {
+    "type": "string",
+    "enum": ["chart_and_percentage", "chart", "none"],
+    "description": "可用性展示模式"
+  },
+  "custom_links": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "properties": {},
+      "description": "key=标题，value=跳转URL链接",
+      "x-apifox-orders": []
+    },
+    "description": "page 底部的跳转链接"
+  },
+  "contact_info": {
+    "type": "string",
+    "description": "支持信息，支持mailto链接或者URL跳转"
+  },
+  "components": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "properties": {
+        "component_id": {
+          "type": "string"
+        },
+        "section_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "unique"
+        },
+        "description": {
+          "type": "string"
+        },
+        "available_since_seconds": {
+          "type": "integer",
+          "description": "component可用的起始时间"
+        },
+        "order_id": {
+          "type": "integer"
+        },
+        "hide_uptime": {
+          "type": "boolean",
+          "description": "是否隐藏可用性数据"
+        },
+        "hide_all": {
+          "type": "boolean",
+          "description": "是否完全隐藏"
+        }
+      },
+      "required": ["name"],
+      "x-apifox-orders": [
+        "component_id",
+        "section_id",
+        "name",
+        "description",
+        "available_since_seconds",
+        "order_id",
+        "hide_uptime",
+        "hide_all"
+      ]
+    },
+    "description": "若需修改该项配置，请使用component对应接口"
+  },
+  "sections": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "properties": {
+        "section_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "unique，创建section时必须传入"
+        },
+        "description": {
+          "type": "string"
+        },
+        "order_id": {
+          "type": "integer"
+        },
+        "hide_uptime": {
+          "type": "boolean",
+          "description": "是否隐藏可用性数据"
+        },
+        "hide_all": {
+          "type": "boolean",
+          "description": "是否完全隐藏"
+        }
+      },
+      "required": ["name"],
+      "x-apifox-orders": [
+        "section_id",
+        "name",
+        "description",
+        "order_id",
+        "hide_uptime",
+        "hide_all"
+      ]
+    },
+    "description": "若需修改该项配置，请使用section对应接口"
+  },
+  "subscription": {
+    "type": "object",
+    "properties": {
+      "email": {
+        "type": "boolean"
+      },
+      "im": {
+        "type": "boolean"
+      }
+    },
+    "x-apifox-orders": ["email", "im"]
+  },
+  "template_preference": {
+    "type": "string",
+    "enum": ["message", "pre_defined"],
+    "description": "状态页默认使用的模板类型"
+  }
+}

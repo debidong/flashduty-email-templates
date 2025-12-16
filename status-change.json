@@ -1,0 +1,148 @@
+{
+  "change_id": {
+    "type": "integer"
+  },
+  "page_id": {
+    "type": "integer"
+  },
+  "type": {
+    "type": "string",
+    "enum": ["incident", "maintenance"]
+  },
+  "title": {
+    "type": "string"
+  },
+  "description": {
+    "type": "string"
+  },
+  "status": {
+    "type": "string",
+    "enum": [
+      "investigating",
+      "identified",
+      "monitoring",
+      "resolved",
+      "scheduled",
+      "ongoing",
+      "completed"
+    ]
+  },
+  "affected_components": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "properties": {
+        "component_id": {
+          "type": "string"
+        },
+        "section_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "available_since_seconds": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["operational", "degraded", "partial_outage", "full_outage"]
+        }
+      },
+      "required": ["component_id", "status"],
+      "x-apifox-orders": [
+        "component_id",
+        "section_id",
+        "name",
+        "description",
+        "available_since_seconds",
+        "status"
+      ]
+    }
+  },
+  "responders": {
+    "type": "array",
+    "items": {
+      "type": "integer"
+    }
+  },
+  "linked_changes": {
+    "type": "array",
+    "items": {
+      "type": "string"
+    }
+  },
+  "start_at_seconds": {
+    "type": "integer"
+  },
+  "close_at_seconds": {
+    "type": "integer"
+  },
+  "updates": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "properties": {
+        "update_id": {
+          "type": "string"
+        },
+        "at_seconds": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "investigating",
+            "identified",
+            "monitoring",
+            "resolved",
+            "scheduled",
+            "ongoing",
+            "completed"
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "component_changes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "component_id": {
+                "type": "string"
+              },
+              "component_name": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "operational",
+                  "degraded",
+                  "partial_outage",
+                  "full_outage"
+                ]
+              }
+            },
+            "x-apifox-orders": ["component_id", "component_name", "status"]
+          }
+        }
+      },
+      "x-apifox-orders": [
+        "update_id",
+        "at_seconds",
+        "status",
+        "description",
+        "component_changes"
+      ]
+    }
+  },
+  "auto_update_by_schedule": {
+    "type": "boolean",
+    "description": "maintenance only"
+  }
+}

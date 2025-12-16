@@ -1,0 +1,25 @@
+{
+  "name": "status-page-email",
+  "version": "1.0.0",
+  "description": "Status Page email templates built with React Email",
+  "scripts": {
+    "dev": "email dev --port 3001",
+    "export": "npx tsx scripts/export.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@react-email/components": "^0.0.31",
+    "@react-email/render": "^1.0.3",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-email": "^3.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  }
+}
+
