@@ -86,7 +86,7 @@ export const MarkdownContent: React.FC<MarkdownContentProps> = ({ children }) =>
   // Template mode: output Go template placeholder
   // Backend passes markdown string, we wrap it in Markdown component
   // But since Go template can't be processed by React, we output raw placeholder
-  // Backend should pre-render markdown to HTML and use {{.Update.DescriptionHTML}}
+  // Backend should pre-render markdown to HTML and use {{.ChangeDescriptionHTML}}
   return (
     <div
       style={{
@@ -95,7 +95,7 @@ export const MarkdownContent: React.FC<MarkdownContentProps> = ({ children }) =>
         lineHeight: '24px',
       }}
       dangerouslySetInnerHTML={{
-        __html: '{{.Update.DescriptionHTML}}',
+        __html: '{{.ChangeDescriptionHTML}}',
       }}
     />
   );

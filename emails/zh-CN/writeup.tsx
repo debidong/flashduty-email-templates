@@ -1,0 +1,100 @@
+import {
+  Body,
+  Container,
+  Head,
+  Html,
+  Preview,
+  Section,
+  Text,
+  Hr,
+} from '@react-email/components';
+import * as React from 'react';
+import {
+  Header,
+  Footer,
+  Button,
+  styles,
+  CONTAINER_WIDTH,
+} from '../../components';
+
+interface WriteupEmailProps {
+  preview?: {
+    pageLogo: string;
+    writeupTitle: string;
+    writeupMessage: string;
+    goToDetailURL: string;
+    poweredByLogo: string;
+    poweredByName: string;
+    poweredByURL: string;
+    unsubscribeURL: string;
+  };
+}
+
+export const WriteupEmail: React.FC<WriteupEmailProps> = ({ preview }) => {
+  const isPreview = !!preview;
+  
+  const writeupTitle = preview?.writeupTitle || '{{.WriteupTitle}}';
+  const writeupMessage = preview?.writeupMessage || '{{.WriteupMessage}}';
+  const goToDetailURL = preview?.goToDetailURL;
+
+  return (
+    <Html>
+      <Head />
+      <Preview>{isPreview ? writeupTitle : '{{.WriteupTitle}}'}</Preview>
+      <Body style={styles.body}>
+        <Container
+          style={{
+            ...styles.container,
+            maxWidth: `${CONTAINER_WIDTH}px`,
+          }}
+        >
+          <Header logo={preview?.pageLogo} />
+          
+          <Hr style={styles.divider} />
+          
+          <Text style={{ ...styles.heading, marginBottom: '16px', marginTop: '16px' }}>
+            {writeupTitle}
+          </Text>
+          
+          <Section>
+            <Text style={{ ...styles.text, marginBottom: '24px' }}>
+              {writeupMessage}
+            </Text>
+          </Section>
+          
+          <Section style={{ marginBottom: '16px' }}>
+            <Button href={goToDetailURL}>
+              查看复盘
+            </Button>
+          </Section>
+          
+          <Footer
+            poweredByLogo={preview?.poweredByLogo}
+            poweredByName={preview?.poweredByName}
+            poweredByUrl={preview?.poweredByURL}
+            unsubscribeUrl={preview?.unsubscribeURL}
+            locale="zh-CN"
+          />
+        </Container>
+      </Body>
+    </Html>
+  );
+};
+
+export default function WriteupEmailPreview() {
+  return (
+    <WriteupEmail
+      preview={{
+        pageLogo: 'https://console.flashcat.cloud/image/saas-logo-s.png',
+        writeupTitle: '新增复盘报告',
+        writeupMessage: '在 Bowen Limitless 状态页面的故障 API 错误率上升 中发布了一份新的公开复盘报告。',
+        goToDetailURL: 'https://status.example.com/writeups/123',
+        poweredByLogo: 'https://console.flashcat.cloud/image/saas-logo.png',
+        poweredByName: 'Flashduty',
+        poweredByURL: 'https://flashcat.cloud',
+        unsubscribeURL: 'https://status.example.com/unsubscribe',
+      }}
+    />
+  );
+}
+

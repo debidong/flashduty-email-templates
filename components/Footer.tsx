@@ -2,13 +2,27 @@ import { Link, Section, Text, Img, Row, Column } from '@react-email/components';
 import * as React from 'react';
 import { colors, styles } from './styles';
 
+type Locale = 'en-US' | 'zh-CN';
+
 interface FooterProps {
   poweredByLogo?: string;
   poweredByName?: string;
   poweredByUrl?: string;
   unsubscribeUrl?: string;
-  showUnsubscribe?: boolean; // defaults to true
+  showUnsubscribe?: boolean;
+  locale?: Locale;
 }
+
+const i18n = {
+  'en-US': {
+    poweredBy: 'Powered by',
+    unsubscribe: 'Unsubscribe',
+  },
+  'zh-CN': {
+    poweredBy: 'Powered by',
+    unsubscribe: '取消订阅',
+  },
+};
 
 export const Footer: React.FC<FooterProps> = ({
   poweredByLogo,
@@ -16,12 +30,15 @@ export const Footer: React.FC<FooterProps> = ({
   poweredByUrl,
   unsubscribeUrl,
   showUnsubscribe = true,
+  locale = 'en-US',
 }) => {
+  const t = i18n[locale];
+
   // Use Go template placeholders for dynamic values
   const brandName = poweredByName || '{{.PoweredByName}}';
-  const brandUrl = poweredByUrl || '{{.PoweredByUrl}}';
+  const brandUrl = poweredByUrl || '{{.PoweredByURL}}';
   const brandLogo = poweredByLogo || '{{.PoweredByLogo}}';
-  const unsubscribe = unsubscribeUrl || '{{.ManageSubscriptionsURL}}';
+  const unsubscribe = unsubscribeUrl || '{{.UnsubscribeURL}}';
 
   return (
     <Section style={{ marginTop: '32px' }}>
@@ -29,7 +46,7 @@ export const Footer: React.FC<FooterProps> = ({
       <Row style={{ marginBottom: '12px' }}>
         <Column>
           <Text style={{ ...styles.textMuted, fontSize: '13px', margin: 0 }}>
-            Powered by{' '}
+            {t.poweredBy}{' '}
             <Link
               href={brandUrl}
               style={{
@@ -71,7 +88,7 @@ export const Footer: React.FC<FooterProps> = ({
                 textDecoration: 'none',
               }}
             >
-              Unsubscribe
+              {t.unsubscribe}
             </Link>
           </Column>
         </Row>

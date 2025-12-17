@@ -7,8 +7,7 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ logo }) => {
-  // Use Go template placeholder: {{.StatusPage.Logo}}
-  const logoUrl = logo || '{{.StatusPage.Logo}}';
+  const logoUrl = logo || '{{.PageLogo}}';
   
   return (
     <Section style={{ marginBottom: '24px' }}>

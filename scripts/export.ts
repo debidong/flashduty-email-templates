@@ -4,7 +4,7 @@
  * Export React Email templates to static HTML files with Go template placeholders.
  * 
  * Usage: npm run export
- * Output: out/incident.html, out/simple.html
+ * Output: out/en-US/*.html, out/zh-CN/*.html
  */
 
 import { render } from '@react-email/render';
@@ -13,46 +13,76 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import * as React from 'react';
 
-// Import email components
-import { IncidentEmail } from '../emails/incident';
-import { SimpleEmail } from '../emails/simple';
-import { ConfirmEmail } from '../emails/confirm';
+// Import en-US email components
+import { IncidentEmail as IncidentEmailEN } from '../emails/en-US/incident';
+import { WriteupEmail as WriteupEmailEN } from '../emails/en-US/writeup';
+import { ConfirmEmail as ConfirmEmailEN } from '../emails/en-US/confirm';
+
+// Import zh-CN email components
+import { IncidentEmail as IncidentEmailZH } from '../emails/zh-CN/incident';
+import { WriteupEmail as WriteupEmailZH } from '../emails/zh-CN/writeup';
+import { ConfirmEmail as ConfirmEmailZH } from '../emails/zh-CN/confirm';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = join(__dirname, '..');
 const outDir = join(rootDir, 'out');
 
+interface TemplateConfig {
+  component: React.ComponentType<Record<string, never>>;
+  outputName: string;
+}
+
+// Post-process HTML to restore Go template syntax that gets escaped during rendering
+function postProcessHtml(html: string): string {
+  // Find all Go template expressions {{...}} and restore &quot; to " within them
+  return html.replace(/\{\{.*?\}\}/g, (match) => {
+    return match.replace(/&quot;/g, '"');
+  });
+}
+
+async function exportLocale(locale: string, templates: TemplateConfig[]) {
+  const localeOutDir = join(outDir, locale);
+  await mkdir(localeOutDir, { recursive: true });
+
+  console.log(`\n📁 ${locale}/`);
+  
+  for (const { component, outputName } of templates) {
+    console.log(`  Processing: ${outputName}`);
+    let html = await render(React.createElement(component, {}));
+    html = postProcessHtml(html);
+    await writeFile(join(localeOutDir, outputName), html, 'utf-8');
+    console.log(`  ✓ ${outputName}`);
+  }
+}
+
 async function exportTemplates() {
-  console.log('📧 Exporting email templates from React components...\n');
+  console.log('📧 Exporting email templates from React components...');
 
-  // Create output directory
-  await mkdir(outDir, { recursive: true });
+  // Export en-US templates
+  await exportLocale('en-US', [
+    { component: IncidentEmailEN, outputName: 'update_email.html' },
+    { component: WriteupEmailEN, outputName: 'writeup_email.html' },
+    { component: ConfirmEmailEN, outputName: 'confirmation_email.html' },
+  ]);
 
-  // Export incident template (without preview data = Go template placeholders)
-  console.log('  Processing: incident.tsx');
-  const incidentHtml = await render(React.createElement(IncidentEmail, {}));
-  await writeFile(join(outDir, 'incident.html'), incidentHtml, 'utf-8');
-  console.log('  ✓ out/incident.html');
-
-  // Export simple template (without preview data = Go template placeholders)
-  console.log('  Processing: simple.tsx');
-  const simpleHtml = await render(React.createElement(SimpleEmail, {}));
-  await writeFile(join(outDir, 'simple.html'), simpleHtml, 'utf-8');
-  console.log('  ✓ out/simple.html');
-
-  // Export confirm template (without preview data = Go template placeholders)
-  console.log('  Processing: confirm.tsx');
-  const confirmHtml = await render(React.createElement(ConfirmEmail, {}));
-  await writeFile(join(outDir, 'confirm.html'), confirmHtml, 'utf-8');
-  console.log('  ✓ out/confirm.html');
+  // Export zh-CN templates
+  await exportLocale('zh-CN', [
+    { component: IncidentEmailZH, outputName: 'update_email.html' },
+    { component: WriteupEmailZH, outputName: 'writeup_email.html' },
+    { component: ConfirmEmailZH, outputName: 'confirmation_email.html' },
+  ]);
 
   console.log('\n✅ Templates exported successfully!\n');
   console.log('📁 Output directory: out/');
-  console.log('   - incident.html  (detailed incident notification)');
-  console.log('   - simple.html    (simple notification)');
-  console.log('   - confirm.html   (subscription confirmation)\n');
+  console.log('   ├── en-US/');
+  console.log('   │   ├── update_email.html       (incident/maintenance notification)');
+  console.log('   │   ├── writeup_email.html      (write-up notification)');
+  console.log('   │   └── confirmation_email.html (subscription confirmation)');
+  console.log('   └── zh-CN/');
+  console.log('       ├── update_email.html');
+  console.log('       ├── writeup_email.html');
+  console.log('       └── confirmation_email.html\n');
 }
 
 // Run export
 exportTemplates().catch(console.error);
-

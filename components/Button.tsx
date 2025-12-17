@@ -8,7 +8,7 @@ interface ButtonProps {
 
 // Bulletproof button using table layout for email client compatibility
 export const Button: React.FC<ButtonProps> = ({ href, children }) => {
-  const buttonUrl = href || '{{.ActionUrl}}';
+  const buttonUrl = href || '{{.GoToDetailURL}}';
 
   return (
     <table
